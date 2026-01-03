@@ -1,0 +1,80 @@
+# --------------------
+# Python
+# --------------------
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+
+# Virtual environments
+.env
+.venv
+venv/
+ENV/
+env/
+
+# Python packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# --------------------
+# FastAPI / ASGI
+# --------------------
+# Uvicorn / Gunicorn logs
+*.log
+
+# Runtime files
+*.pid
+
+# --------------------
+# Environment variables
+# --------------------
+.env.local
+.env.dev
+.env.test
+.env.prod
+
+# --------------------
+# Testing / coverage
+# --------------------
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+
+# --------------------
+# Type checking
+# --------------------
+.mypy_cache/
+.pyright/
+.dmypy.json
+
+# --------------------
+# IDEs & Editors
+# --------------------
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# --------------------
+# OS files
+# --------------------
+.DS_Store
+Thumbs.db
+
+# --------------------
+# Jupyter (optional)
+# --------------------
+.ipynb_checkpoints/
+
+# --------------------
+# SQLite / local databases (common in FastAPI dev)
+# --------------------
+*.sqlite3
+*.db
