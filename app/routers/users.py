@@ -2,7 +2,7 @@ from fastapi import APIRouter
 from app.schemas.user import UserCreate, UserOut
 from app.services.user_service import create_user
 
-router = APIRouter(prefix="/users", tags=["users"]) # TODO look up what tags are
+router = APIRouter(prefix="/users", tags=["users"])
 
 @router.post("/", response_model=UserOut)
 def create(user: UserCreate):
