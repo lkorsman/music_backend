@@ -3,7 +3,7 @@ from pydantic import BaseModel
 class SongCreate(BaseModel):
    id: int
    title: str
-   artist: str
+   artist_name: str
    duration: int
 
 class SongOut(BaseModel):
