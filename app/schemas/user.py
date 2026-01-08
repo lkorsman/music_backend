@@ -3,6 +3,6 @@ from pydantic import BaseModel
 class UserCreate(BaseModel):
     username: str
 
-class UserOut(BaseModel):
+class User(BaseModel):
     id: int
     username: str

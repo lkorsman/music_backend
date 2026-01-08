@@ -6,8 +6,13 @@ def top_songs(limit: int = 10):
 
    cursor.execute(
       """
-      SELECT s.id, s.title, s.artist, s.play_count
-      FROM songs s
+      SELECT
+         s.id,
+         s.title,
+         a.name AS artist,
+         s.play_count
+      FROM songs s 
+      JOIN artists a ON s.artist_id = a.id
       ORDER BY s.play_count DESC
       LIMIT %s
       """,

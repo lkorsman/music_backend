@@ -1,12 +1,11 @@
 from pydantic import BaseModel
 
 class SongCreate(BaseModel):
-   id: int
    title: str
    artist_name: str
    duration: int
 
-class SongOut(BaseModel):
+class Song(BaseModel):
    id: int
    title: str
    artist: str

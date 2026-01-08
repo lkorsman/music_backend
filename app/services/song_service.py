@@ -1,36 +1,29 @@
 from app.db.connection import get_connection
-from app.services.artist_service import get_or_create_artist
+from app.models.artist import Artist
+from sqlalchemy.orm import Session
 
-def create_song(song):
-   artist_id = get_or_create_artist(song.artist_name)
+def get_or_create_artist(db: Session, name: str) -> Artist:
+   artist = db.query(Artist).filter(Artist.name == name).first()
+   if not artist:
+      artist = Artist(name=name)
+      db.add(artist)
+      db.commit()
+      db.refresh(artist)
+   return artist
 
-   conn = get_connection()
-   cursor = conn.cursor(dictionary=True)
 
-   cursor.execute(
-      """
-      INSERT INTO songs (id, title, artist_id, duration)
-      VALUES (%s, %s, %s, %s)
-      """,
-      (song.id, song.title, artist_id, song.duration)
+def create_song(db: Session, song_data):
+   artist_id = get_or_create_artist(db, song_data.artist_name)
+   song = Song(
+      title=song_data.title,
+      artist_id=artist_id,
+      duration=song_data.duration
    )
-   conn.commit()
 
-   cursor.execute(
-      """
-      SELECT s.id, s.title, a.name AS artist, s.duration, s.play_count 
-      FROM songs s 
-      JOIN artists a ON s.artist_id = a.id
-      WHERE s.id = %s
-      """,
-      (song.id,)
-   )
-   created_song = cursor.fetchone()
-
-   cursor.close()
-   conn.close()
-
-   return created_song
+   db.add(song)
+   db.commit()
+   db.refresh(song)
+   return song
 
 def list_songs():
    conn = get_connection()
