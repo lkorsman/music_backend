@@ -1,5 +1,6 @@
 from app.db.connection import get_connection
 from app.models.artist import Artist
+from app.models.song import Song
 from sqlalchemy.orm import Session
 
 def get_or_create_artist(db: Session, name: str) -> Artist:
@@ -13,7 +14,9 @@ def get_or_create_artist(db: Session, name: str) -> Artist:
 
 
 def create_song(db: Session, song_data):
-   artist_id = get_or_create_artist(db, song_data.artist_name)
+   artist = get_or_create_artist(db, song_data.artist_name)
+   artist_id = artist.id
+
    song = Song(
       title=song_data.title,
       artist_id=artist_id,

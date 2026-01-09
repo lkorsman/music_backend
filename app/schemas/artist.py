@@ -6,4 +6,6 @@ class ArtistCreate(BaseModel):
 class ArtistOut(BaseModel):
    id: int
    name: str
-   
+
+   class Config:
+      from_attributes = True
