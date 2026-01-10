@@ -32,11 +32,12 @@ def top_songs_for_user(user_id: int, limit: int = 10):
 
    cursor.execute(
       """
-      SELECT s.id, s.title, s.artist, COUNT(p.id) AS play_count
+      SELECT s.id, s.title, a.name AS artist, COUNT(p.id) AS play_count
       FROM plays p 
       JOIN songs s ON p.song_id = s.id
+      JOIN artists a on s.artist_id = a.id
       WHERE p.user_id = %s
-      GROUP BY s.id, s.title, s.artist
+      GROUP BY s.id, s.title, a.name
       ORDER BY play_count DESC
       LIMIT %s
       """,

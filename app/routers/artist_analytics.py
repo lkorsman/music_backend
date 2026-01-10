@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 
 from app.models.artist import Artist
@@ -14,7 +14,7 @@ from app.services.artist_service import (
 )
 from app.db.database import get_db
 
-router = APIRouter(prefix="/artists", tags=["artist analytics"])
+router = APIRouter(prefix="/analytics/artists", tags=["artist analytics"])
 
 @router.get("")
 def list_artists(db: Session = Depends(get_db)):
@@ -32,16 +32,13 @@ def get_one(artist_id: int, db: Session = Depends(get_db)):
    return artist
 
 @router.get("/top")
-def get_top_artists(limit: int = 10):
+def get_top_artists(limit: int = Query(10, le=100)):
    return top_artists(limit)
 
 @router.get("/users/{user_id}/top")
-def get_user_top_artists(user_id: int, limit: int = 10):
+def get_user_top_artists(user_id: int, limit: int = Query(10, le=100)):
    return top_artists_for_user(user_id, limit)
 
-@router.get("/{artist_id}/plays")
+@router.get("/{artist_id}/plays/total")
 def get_artist_total_plays(artist_id: int):
-   return {
-      "artist_id": artist_id,
-      "total_plays": artist_total_plays(artist_id)
-   }
+   return {"total_plays": artist_total_plays(artist_id)}
