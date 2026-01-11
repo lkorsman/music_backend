@@ -10,6 +10,8 @@ class PlayOut(BaseModel):
    user_id: int
    song_id: int
    played_at: datetime
+   song_title: str
+   artist_name: str
 
    class Config:
-      orm_mode = True
+      from_attributes = True

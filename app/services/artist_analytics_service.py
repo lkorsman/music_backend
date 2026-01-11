@@ -9,7 +9,7 @@ def top_artists(limit: int = 10):
       SELECT a.id, a.name, SUM(s.play_count) AS total_plays
       FROM artists a 
       JOIN songs s ON s.artist_id = a.id
-      GROUP BY a.id, a.id, a.name
+      GROUP BY a.id, a.name
       ORDER BY total_plays DESC
       LIMIT %s
       """,
