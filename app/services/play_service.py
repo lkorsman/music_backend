@@ -3,6 +3,7 @@ from sqlalchemy import func
 from app.models.play import Play
 from app.models.song import Song
 from app.models.user import User
+from app.models.artist import Artist
 
 def create_play(db: Session, user_id: int, song_id:int):
    play = Play(user_id=user_id, song_id=song_id)
@@ -83,5 +84,31 @@ def get_top_songs_for_user(db: Session, user_id: int, limit: int = 10):
       play.artist_name = song.artist.name
       play.play_count = play_count
       results.append(play)
+
+   return results
+
+def get_top_artists_for_user(db: Session, user_id: int, limit: int = 10):
+   user = db.query(User).filter(User.id == user_id).first()
+   if not user:
+      raise ValueError("User not found")
+
+   top_artists = (
+      db.query(
+         Artist,
+         func.count(Play.id).label("play_count")
+      )
+      .join(Song, Song.artist_id == Artist.id)
+      .join(Play, Play.song_id == Song.id)
+      .filter(Play.user_id == user_id)
+      .group_by(Artist.id)
+      .order_by(func.count(Play.id).desc())
+      .limit(limit)
+      .all()
+   )
+
+   results = []
+   for artist, play_count in top_artists:
+      artist.play_count = play_count
+      results.append(artist)
 
    return results

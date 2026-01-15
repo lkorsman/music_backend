@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from typing import List
 
 from app.db.database import get_db
+from app.schemas.artist import ArtistAnalyticsOut
 from app.schemas.play import PlayOut
 from app.services.play_service import list_plays, record_play, get_recent_plays_for_user, get_top_songs_for_user
 

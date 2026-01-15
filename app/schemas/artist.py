@@ -9,3 +9,11 @@ class ArtistOut(BaseModel):
 
    class Config:
       from_attributes = True
+
+class ArtistAnalyticsOut(BaseModel):
+   id:int
+   name: str
+   play_count: int
+
+   class Config:
+      from_attributes = True
