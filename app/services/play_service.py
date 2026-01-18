@@ -1,3 +1,5 @@
+from datetime import timezone
+
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 from app.models.play import Play
@@ -56,6 +58,7 @@ def get_recent_plays_for_user(db: Session, user_id: int, limit: int = 10):
    for play in recent_plays:
       play.song_title = play.song.title
       play.artist_name = play.song.artist.name
+      play.played_at = play.played_at.astimezone(timezone.utc).isoformat()
 
    return recent_plays
 
@@ -66,26 +69,25 @@ def get_top_songs_for_user(db: Session, user_id: int, limit: int = 10):
 
    top_songs = (
       db.query(
-         Song,
-         func.count(Play.id).label("user_play_count")
+         Song.id.label("song_id"),
+         Song.title.label("song_title"),
+         Artist.name.label("artist_name"),
+         func.count(Play.id).label("play_count"),
       )
       .join(Play, Play.song_id == Song.id)
+      .join(Artist, Song.artist_id == Artist.id)
       .filter(Play.user_id == user_id)
-      .group_by(Song.id)
+      .group_by(
+         Song.id,
+         Song.title,
+         Artist.name,
+      )
       .order_by(func.count(Play.id).desc())
       .limit(limit)
       .all()
    )
 
-   results = []
-   for song, play_count in top_songs:
-      play = Play(user_id=user_id, song_id=song.id)
-      play.song_title = song.title
-      play.artist_name = song.artist.name
-      play.play_count = play_count
-      results.append(play)
-
-   return results
+   return top_songs
 
 def get_top_artists_for_user(db: Session, user_id: int, limit: int = 10):
    user = db.query(User).filter(User.id == user_id).first()
